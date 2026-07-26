@@ -134,6 +134,15 @@ def discover_selectors(cleaned_html: str, site_url: str) -> Selectors | None:
             log.error("AI response missing required selectors: %s", missing)
             return None
 
+        REQUIRED_NON_NULL = {"product_card", "product_name", "product_price"}
+        invalid = {
+            key for key in REQUIRED_NON_NULL
+            if not isinstance(data.get(key), str) or not data[key].strip()
+        }
+        if invalid:
+            log.error("AI response has empty/invalid selectors: %s", invalid)
+            return None
+
         selectors: Selectors = {
             "product_card":         data["product_card"],
             "product_name":         data["product_name"],
@@ -155,16 +164,23 @@ def discover_selectors(cleaned_html: str, site_url: str) -> Selectors | None:
         return None
 
 
-def run_discovery(site_url: str) -> bool:
+def run_discovery(site_url: str, force: bool = False) -> bool:
     """
     Orchestrates the full discovery flow for one site.
-    Skips if selectors already exist in Firebase.
+    Skips if selectors already exist in Firebase — unless force=True, in
+    which case existing selectors are ignored and discovery runs anyway.
+    Use force=True when the caller suspects current selectors are stale
+    (e.g. the site started returning empty/broken scrapes despite selectors
+    being on file).
     Returns True if selectors are available (existing or newly found), False otherwise.
     """
-    existing = firebase_client.get_last_selectors(site_url)
-    if existing:
-        log.info("Selectors already exist for %s — skipping discovery", site_url)
-        return True
+    if not force:
+        existing = firebase_client.get_last_selectors(site_url)
+        if existing:
+            log.info("Selectors already exist for %s — skipping discovery", site_url)
+            return True
+    else:
+        log.info("Forcing fresh discovery for %s (ignoring existing selectors)", site_url)
 
     log.info("Starting selector discovery for %s", site_url)
 

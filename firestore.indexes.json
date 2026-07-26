@@ -29,6 +29,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         { "fieldPath": "url", "order": "ASCENDING" },
+        { "fieldPath": "userId", "order": "ASCENDING" },
         { "fieldPath": "detected_at", "order": "DESCENDING" }
       ]
     }

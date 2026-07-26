@@ -67,7 +67,7 @@ def _scrape_with_selectors(page, url: str, selectors: dict) -> ScrapeResult:
 
         if not cards:
             log.warning("No product cards found for %s, falling back", url)
-            return _scrape_full_site(url)
+            return _scrape_full_site(page, url)
 
         scraped_content = []
 
@@ -85,10 +85,10 @@ def _scrape_with_selectors(page, url: str, selectors: dict) -> ScrapeResult:
 
     except PlaywrightTimeout:
         log.warning("Timeout while scraping %s — site too slow", url)
-        return _scrape_full_site(url)
+        return _scrape_full_site(page, url)
     except PlaywrightError as e:
         log.error("Playwright error for %s: %s", url, e)
-        return _scrape_full_site(url)
+        return _scrape_full_site(page, url)
 
 
 def scrape_site(url: str) -> ScrapeResult:
@@ -129,10 +129,10 @@ def scrape_site(url: str) -> ScrapeResult:
         
         if selectors:
             log.info("Using discovered selectors for %s", url)
-            return _scrape_with_selectors(url, selectors)
+            return _scrape_with_selectors(page, url, selectors)
         
         log.info("No selectors found for %s, using full text scraper", url)
-        return _scrape_full_site(url)
+        return _scrape_full_site(page, url)
     
     finally:
         browser.close()

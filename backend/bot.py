@@ -13,21 +13,34 @@ logging.basicConfig(
 log = logging.getLogger(__name__)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """When user sends /start — save their chat_id to Firebase."""
     chat_id = str(update.effective_chat.id)
     user_name = update.effective_user.first_name
-
     token = context.args[0] if context.args else None
 
-    if token:
-        firebase_client.save_telegram_connection(token, chat_id)
+    if not token:
+        await update.message.reply_text(f"Hi {user_name}! Please connect through the website.")
+        return
+
+    log.info("Connection attempt: token=%s chat_id=%s", token, chat_id)
+
+    try:
+        result = firebase_client.save_telegram_connection(token, chat_id)
+    except Exception:
+        log.exception("save_telegram_connection failed for token=%s chat_id=%s", token, chat_id)
         await update.message.reply_text(
-            f"✅ Connected! You'll now receive competitor alerts here."
+            "⚠️ Something went wrong on our side. Please try the link again or contact support."
         )
-    else:
+        return
+
+    if not result:
+        log.warning("save_telegram_connection returned falsy for token=%s — token likely invalid or expired", token)
         await update.message.reply_text(
-            f"Hi {user_name}! Please connect through the website."
+            "❌ This link is invalid or expired. Please generate a new one from the website."
         )
+        return
+
+    log.info("Telegram connected: chat_id=%s", chat_id)
+    await update.message.reply_text("✅ Connected! You'll now receive competitor alerts here.")
 
 def run_bot():
     app = ApplicationBuilder().token(os.getenv("TELEGRAM_TOKEN")).build()

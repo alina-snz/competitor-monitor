@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom'
-import ThemeToggle from '../components/ThemeToggle'
 import { Button } from '@/components/ui/button'
 
 function Nav() {
@@ -27,7 +26,6 @@ function Nav() {
 
                 {/* Кнопки справа */}
                 <div className="flex items-center gap-3">
-                    <ThemeToggle />
                     <button
                         onClick={() => navigate('/login')}
                         className="text-white/60 hover:text-white text-sm transition-colors"
@@ -43,6 +41,35 @@ function Nav() {
                 </div>
             </div>
         </nav>
+    )
+}
+
+// Small pill used for the floating stat badges over the screenshot —
+// same visual language as the in-app stat tiles, just compact enough
+// to sit on top of an image.
+function FloatingStat({ icon, label, value, valueClass = "text-white" }) {
+    return (
+        <div className="
+            bg-[#0B1530]/90 backdrop-blur-xl
+            border border-white/10
+            rounded-2xl px-5 py-4
+            shadow-2xl shadow-black/40
+            flex items-center gap-3
+        ">
+            <div className="
+                w-9 h-9 rounded-xl
+                bg-gradient-to-br from-blue-500/20 to-violet-500/20
+                border border-white/10
+                flex items-center justify-center text-base
+                flex-shrink-0
+            ">
+                {icon}
+            </div>
+            <div>
+                <div className="text-white/40 text-[11px] leading-none mb-1">{label}</div>
+                <div className={`font-bold text-lg leading-none ${valueClass}`}>{value}</div>
+            </div>
+        </div>
     )
 }
 
@@ -116,22 +143,65 @@ function Hero() {
                     </Button>
                 </div>
 
-                {/* Скриншот дашборда */}
-                <div className="mt-16 relative">
+                {/* Скриншот дашборда — стеклянная рамка + плавающие метрики */}
+                <div className="mt-24 md:mt-28 relative">
+
+                    {/* Мягкое свечение под скриншотом, по цвету бренда */}
                     <div className="
-                        absolute inset-0
-                        bg-gradient-to-t from-[#050B1F] via-transparent to-transparent
-                        z-10 pointer-events-none
+                        absolute -inset-6 md:-inset-10
+                        bg-gradient-to-r from-blue-500/20 via-violet-500/10 to-blue-500/20
+                        blur-3xl rounded-[2rem] pointer-events-none
                     " />
+
+                    {/* Градиентная рамка (padding-border trick) */}
                     <div className="
-                        bg-[#0D1B3E] border border-white/10
-                        rounded-2xl overflow-hidden shadow-2xl
-                        shadow-blue-500/10
+                        relative rounded-2xl p-px
+                        bg-gradient-to-b from-white/20 via-white/5 to-transparent
+                        shadow-2xl shadow-blue-500/10
                     ">
-                        {/* Заглушка для скриншота — потом заменим реальным */}
-                        <div className="h-80 flex items-center justify-center text-white/20">
-                            <p>Dashboard screenshot goes here</p>
+                        <div className="bg-[#0D1B3E] rounded-2xl overflow-hidden">
+
+                            {/* Браузерная шапка — закрепляет, что это реальный продукт, а не абстрактная картинка */}
+                            <div className="
+                                flex items-center gap-2
+                                px-4 py-3
+                                border-b border-white/5
+                                bg-white/[0.02]
+                            ">
+                                <span className="w-2.5 h-2.5 rounded-full bg-red-400/60" />
+                                <span className="w-2.5 h-2.5 rounded-full bg-amber-400/60" />
+                                <span className="w-2.5 h-2.5 rounded-full bg-green-400/60" />
+                                <div className="
+                                    ml-3 text-white/30 text-xs
+                                    bg-white/[0.03] border border-white/5
+                                    rounded-md px-3 py-1
+                                ">
+                                    app.competitormonitor.io/history
+                                </div>
+                            </div>
+
+                            {/* Сам скриншот — файл нужно положить в /public/dashboard-preview.png */}
+                            <img
+                                src="/dashboard-preview.png"
+                                alt="Competitor Monitor analytics dashboard"
+                                className="w-full block"
+                            />
+
+                            {/* Лёгкое затемнение снизу, чтобы скриншот плавно уходил в фон страницы */}
+                            <div className="
+                                absolute bottom-0 left-0 right-0 h-24
+                                bg-gradient-to-t from-[#050B1F] to-transparent
+                                pointer-events-none
+                            " />
                         </div>
+                    </div>
+
+                    {/* Плавающие метрики поверх скриншота — то, что реально считает продукт */}
+                    <div className="hidden md:block absolute -left-8 top-1/4 -translate-y-1/2 z-20">
+                        <FloatingStat icon="📉" label="Price drops tracked" value="29" valueClass="text-emerald-400" />
+                    </div>
+                    <div className="hidden md:block absolute -right-8 bottom-10 z-20">
+                        <FloatingStat icon="%" label="Avg. price change" value="-36.1%" valueClass="text-emerald-400" />
                     </div>
                 </div>
             </div>

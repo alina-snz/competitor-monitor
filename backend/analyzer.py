@@ -189,15 +189,15 @@ def compare_with_ai(old_data: dict, new_data: dict, site_url: str) -> AnalysisRe
 
     except RateLimitError:
         log.error("Rate limit exceeded")
-        raise
+        return None
 
     except APITimeoutError:
         log.error("Request timed out")
-        raise
+        return None
 
     except APIError as e:
         log.error("API error: %s", e)
-        raise
+        return None
 
 
 def run_analysis(old_data: dict, new_data: dict, site_url: str):
@@ -213,7 +213,7 @@ def run_analysis(old_data: dict, new_data: dict, site_url: str):
 
     except Exception as e:
         log.error("Analysis failed: %s", e)
-        raise
+        return None
 
 
 

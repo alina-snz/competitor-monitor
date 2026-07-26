@@ -29,28 +29,28 @@ Details:
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                        FRONTEND                         │
-│  React + Vite + Tailwind + Recharts                      │
-│  Landing · Login (Google Auth) · Dashboard · History      │
-│  Settings (Telegram connect or Email choice)              │
-└───────────────────────┬───────────────────────────────────┘
+│  React + Vite + Tailwind + Recharts                     │
+│  Landing · Login (Google Auth) · Dashboard · History    │
+│  Settings (Telegram connect or Email choice)            │
+└───────────────────────┬─────────────────────────────────┘
                          │ Firestore (real-time)
 ┌────────────────────────▼──────────────────────────────────┐
 │                       FIREBASE                            │
 │  Firestore — sites / snapshots / hashes /                 │
 │              selectors / changes / users                  │
-│  Auth — Google Sign-In, per-user data isolation            │
+│  Auth — Google Sign-In, per-user data isolation           │
 └────────────────────────┬──────────────────────────────────┘
                          │ Admin SDK
 ┌────────────────────────▼──────────────────────────────────┐
-│                       BACKEND                              │
-│  Python · APScheduler · Playwright · OpenAI                │
-│                                                             │
-│  main.py ──► discoverer.py ──► scraper.py                  │
-│      │                                                      │
-│      └──► analyzer.py ──► notifier.py                      │
-│                │                                            │
-│           firebase_client.py  (all DB operations)           │
-└─────────────────────────────────────────────────────────────┘
+│                       BACKEND                             │
+│  Python · APScheduler · Playwright · OpenAI               │
+│                                                           │
+│  main.py ──► discoverer.py ──► scraper.py                 │
+│      │                                                    │
+│      └──► analyzer.py ──► notifier.py                     │
+│                │                                          │
+│           firebase_client.py  (all DB operations)         │
+└───────────────────────────────────────────────────────────┘
 ```
 
 ## Daily Pipeline

@@ -19,10 +19,11 @@ Changes detected!
 
 Site: site.com
 
-Summary: Significant price drops — up to 35% off.
+Summary: Significant price drops on rose bouquets — up to 35% off.
 
 Details:
 ...
+```
 
 ## Architecture
 
@@ -193,7 +194,7 @@ Create a `.env` file in `frontend/` with your Firebase Web SDK config (`VITE_FIR
 
 ### Environment Variables
 
->  Names below match what's used in `main.py` / `discoverer.py` / `analyzer.py`. Double-check the exact variable names your `firebase_client.py`, `notifier.py`, and `bot.py` expect before deploying — this list covers what's confirmed from the modules shown here.
+> Names below match what's used in `main.py` / `discoverer.py` / `analyzer.py`. Double-check the exact variable names your `firebase_client.py`, `notifier.py`, and `bot.py` expect before deploying — this list covers what's confirmed from the modules shown here.
 
 | Variable | Used in | Description |
 |---|---|---|
